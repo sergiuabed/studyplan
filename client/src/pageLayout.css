@@ -6,11 +6,26 @@
 
 .side-column {
     background-color: rgb(239, 239, 239);
+    min-height: 100%;
 }
 
-.navBar{
+.navBar {
     position: fixed;
     top:0%;
     z-index: 100;
     padding: 0%;
+}
+
+.nestedTable {
+    background-color: rgb(201, 201, 201);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.addBorder {
+    margin-bottom: 0.5rem;
+}
+
+.tableDiv {
+    height: 25rem;
+    overflow-y: auto;
 }

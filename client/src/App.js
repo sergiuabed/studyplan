@@ -29,6 +29,8 @@ function App() {
   let coursesArr=[c1, c2];*/
 
   const [courses, setCourses] = useState([]);
+  const [expandIncompatible, setExpandIncompatible] = useState([]); // will store an array of codes of the courses on which the expand state is ON for the incompatible courses info
+  const [expandPreparatory, setExpandPreparatory] = useState([]);
 
   useEffect(() => {
     const loadCourses = async () => {
@@ -47,11 +49,13 @@ function App() {
         </Col>
       </Row>
       <Row className="main-row">
-        <Col sm={"2"} className="side-column">Ciao</Col>
-        <Col sm={"8"}>
-          <CoursesTable courses={ courses } />
+        <Col sm={"1"} className="side-column">Ciao</Col>
+        <Col sm={"10"}>
+          <div className='tableDiv'>
+            <CoursesTable courses={courses} expandIncompatible={expandIncompatible} setExpandIncompatible={setExpandIncompatible} expandPreparatory={expandPreparatory} setExpandPreparatory={setExpandPreparatory} />
+          </div>
         </Col>
-        <Col sm={"2"} className="side-column">Ciao</Col>
+        <Col sm={"1"} className="side-column">Ciao</Col>
       </Row>
     </Container>
   );

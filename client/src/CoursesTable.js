@@ -12,10 +12,11 @@ function CoursesTable(props) {
                     <th>Max Students</th>
                     <th>Incompatible With</th>
                     <th>Preparatory course</th>
+                    <th>Enrolled Students</th>
                 </tr>
             </thead>
             <tbody>
-                { props.courses.map(c => (<CourseRow key={c.code} course={c}/>)) }
+                { props.courses.map(c => (<CourseRow key={c.code} course={c} allCourses={props.courses} expandIncompatible={props.expandIncompatible} setExpandIncompatible={props.setExpandIncompatible} expandPreparatory={props.expandPreparatory} setExpandPreparatory={props.setExpandPreparatory}/>)) }
             </tbody>
         </Table>
     );

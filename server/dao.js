@@ -10,12 +10,12 @@ const { Course } = require('./course');
 
 const getAllCourses = () => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM courses';
+        const sql = 'SELECT * FROM courses ORDER BY name';
         db.all(sql, [], (err, rows) => {
             if(err)
                 reject(err);
             else{
-                const courses = rows.map(row => new Course(row.code, row.name, row.credits, row.max_students, row.incompatible_with, row.preparatory_course));
+                const courses = rows.map(row => new Course(row.code, row.name, row.credits, row.max_students, row.incompatible_with, row.preparatory_course, row.enrolled_students));
                 resolve(courses);
             }
         });
