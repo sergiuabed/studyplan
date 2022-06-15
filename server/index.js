@@ -27,6 +27,20 @@ app.get('/api/courses', async (req, res) => {
   
 });
 
+app.get('/api/:user', async (req, res) => { //MODIFY THIS API ACCORDINGLY WHEN IMPLEMENTING USER SESSIONS
+  if(!req.params.user)
+    res.status(422).end();
+
+  try{
+    let courses = await dao.getStudyPlan(req.params.user);
+    res.status(200).json(courses);
+  }catch(err){
+    console.log(err);
+    res.status(500).json(err);
+    throw err;
+  }
+});
+
 // activate the server
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);

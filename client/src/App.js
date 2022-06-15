@@ -29,6 +29,7 @@ function App() {
   let coursesArr=[c1, c2];*/
 
   const [courses, setCourses] = useState([]);
+  const [studyPlan, setStudyPlan] = useState([]);
   const [expandIncompatible, setExpandIncompatible] = useState([]); // will store an array of codes of the courses on which the expand state is ON for the incompatible courses info
   const [expandPreparatory, setExpandPreparatory] = useState([]);
 
@@ -41,6 +42,15 @@ function App() {
     loadCourses();
   }, []);
 
+  useEffect(() => { // MODIFY THIS ACCORDINGLY WHEN IMPLEMENTING THE USER SESSIONS
+    const loadStudyPlan = async () => {
+      let c = await API.getStudyPlan('MarioRossi');
+      setStudyPlan(c);
+    }
+
+    loadStudyPlan();
+  }, []);
+
   return (
     <Container fluid>
       <Row>
@@ -49,13 +59,16 @@ function App() {
         </Col>
       </Row>
       <Row className="main-row">
-        <Col sm={"1"} className="side-column">Ciao</Col>
-        <Col sm={"10"}>
+        {/*<Col sm={"1"} className="side-column">Ciao</Col>*/}
+        <Col sm={"12"}>
           <div className='tableDiv'>
             <CoursesTable courses={courses} expandIncompatible={expandIncompatible} setExpandIncompatible={setExpandIncompatible} expandPreparatory={expandPreparatory} setExpandPreparatory={setExpandPreparatory} />
           </div>
+          <div className='tableDiv'>
+            <CoursesTable courses={studyPlan} expandIncompatible={expandIncompatible} setExpandIncompatible={setExpandIncompatible} expandPreparatory={expandPreparatory} setExpandPreparatory={setExpandPreparatory} />
+          </div>
         </Col>
-        <Col sm={"1"} className="side-column">Ciao</Col>
+        {/*<Col sm={"1"} className="side-column">Ciao</Col>*/}
       </Row>
     </Container>
   );

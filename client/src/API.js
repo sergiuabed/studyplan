@@ -19,5 +19,20 @@ const getAllCourses = async () => {
     }
 }
 
-const API = { getAllCourses };
+const getStudyPlan = async (user) => {  //"user" WILL BE UNNECESSARY WHEN IMPLEMENTING THE USER SESSION
+    try {
+        const response = await fetch(serverURL + '/' + user);
+        if (response.ok) {
+            const courses = await response.json();
+            return courses;
+        } else {
+            const text = await response.text();
+            throw new TypeError(text);
+        }
+    } catch (err) {
+        throw err;
+    }
+}
+
+const API = { getAllCourses, getStudyPlan };
 export default API;
