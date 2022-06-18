@@ -1,6 +1,13 @@
 .main-row {
     position: relative;
-    top: 56px;
+    top: 70px;
+    /*min-height: 100%;*/
+    background-color: rgb(245, 245, 245);
+}
+
+.buttons-row {
+    position: relative;
+    top: 63px;
     /*min-height: 100%;*/
     background-color: rgb(245, 245, 245);
 }
@@ -27,13 +34,42 @@
 }
 
 .tableDiv {
-    position: relative;
+    /*position: relative;
     left: 22%;
-    height: 25rem;
-    width: 70rem;
+    width: 70rem;*/
+    height: 35rem;
     overflow-y: auto;
     background-color: white;
-    margin: 2rem;
+    /*margin: 2rem;*/
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     border-radius: 10px;
 }
+
+.login {
+    background-color: rgb(235, 235, 235);
+    position: absolute;
+    top: 30%;
+    padding: 2rem;
+    border-radius: 25px;
+}
+
+.warningMsg {
+    position: fixed;
+    bottom: 0%;
+    margin-left: 42%;
+}
+
+.disabledInput {
+    width: 10rem;
+    padding-top: 0.5rem;
+}
+
+.topButtons {
+    padding: 2ref;
+}
+
+/*.deleteButton {
+    position: relative;
+    right:0%;
+    left: 88%
+}*/

@@ -19,7 +19,7 @@ function CourseRow(props) {
             <td>{props.course.name}</td>
             <td>{props.course.credits}</td>
             <td>{props.course.maxStudents}</td>
-            <td>{props.course.incompatibleWith === null ? ' ' : <NestedTableCell courseCode={props.course.code} courses={searchCourses(props.allCourses, props.course.incompatibleWith)} expandState={props.expandIncompatible} setExpandState={props.setExpandIncompatible} />}</td> {/*NEED TO IMPLEMENT EXPANDED/CONTRACTED STATES FOR incompatibleWith and preparatoryCourse */}
+            <td>{props.course.incompatibleWith === null ? ' ' : <NestedTableCell courseCode={props.course.code} courses={searchCourses(props.allCourses, props.course.incompatibleWith)} expandState={props.expandIncompatible} setExpandState={props.setExpandIncompatible} />}</td>
             <td>{props.course.preparatoryCourse === null ? ' ' : <NestedTableCell courseCode={props.course.code} courses={searchCourses(props.allCourses, [props.course.preparatoryCourse])} expandState={props.expandPreparatory} setExpandState={props.setExpandPreparatory} />}</td>
             <td>{props.course.enrolledStudents}</td>
         </tr>
