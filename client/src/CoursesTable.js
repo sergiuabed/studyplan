@@ -6,6 +6,7 @@ function CoursesTable(props) {
         <Table>
             <thead>
                 <tr>
+                    {props.loggedIn === true && <th></th>}
                     <th>Code</th>
                     <th>Name</th>
                     <th>Credits</th>
@@ -16,7 +17,7 @@ function CoursesTable(props) {
                 </tr>
             </thead>
             <tbody>
-                { props.courses.map(c => (<CourseRow key={c.code} course={c} allCourses={props.courses} expandIncompatible={props.expandIncompatible} setExpandIncompatible={props.setExpandIncompatible} expandPreparatory={props.expandPreparatory} setExpandPreparatory={props.setExpandPreparatory}/>)) }
+                { props.courses.map(c => (<CourseRow incompatible={props.incompatible} preparatory={props.preparatory} loggedIn={props.loggedIn} key={c.code} course={c} allCourses={props.courses} studyPlan={props.studyPlan} setStudyPlan={props.setStudyPlan} expandIncompatible={props.expandIncompatible} setExpandIncompatible={props.setExpandIncompatible} expandPreparatory={props.expandPreparatory} setExpandPreparatory={props.setExpandPreparatory} deletedCourses={props.deletedCourses} setDeletedCourses={props.setDeletedCourses} addedCourses={props.addedCourses} setAddedCourses={props.setAddedCourses}/>)) }
             </tbody>
         </Table>
     );

@@ -73,3 +73,12 @@
     right:0%;
     left: 88%
 }*/
+
+.incompatibleCourse {
+    background-color: rgb(180, 180, 180);
+    color:rgb(95, 95, 95)
+}
+
+.needsPreparatoryCourse {
+    background-color: #fff3cd;
+}

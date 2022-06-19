@@ -13,8 +13,29 @@ function CourseRow(props) {
 
         return resCourses;
     }
+
+    const highlightRow = () => {
+        if (props.incompatible.includes(props.course.code))
+            return "incompatibleCourse";
+        
+        let studyPlanCodes = props.studyPlan.map(c => c.code);
+        if(props.course.preparatoryCourse !== null && !studyPlanCodes.includes(props.course.preparatoryCourse))
+            return "needsPreparatoryCourse"
+
+        return "";
+    }
+
+    const added = () => {
+        let studyPlanCodes = props.studyPlan.map(c => c.code);
+        if (studyPlanCodes.includes(props.course.code))
+            return true;
+        else
+            return false;
+    }
+
     return (
-        <tr>
+        <tr className={ props.loggedIn ===true ? highlightRow() : ""}>
+            {props.loggedIn === true && <td><AddCourseButton added={added()} highlightRow={highlightRow} disabled={highlightRow() === "incompatibleCourse"} course={props.course} deletedCourses={props.deletedCourses} setDeletedCourses={props.setDeletedCourses} addedCourses={props.addedCourses} setAddedCourses={props.setAddedCourses} studyPlan={props.studyPlan} setStudyPlan={props.setStudyPlan} /></td>}
             <td>{props.course.code}</td>
             <td>{props.course.name}</td>
             <td>{props.course.credits}</td>
@@ -55,6 +76,37 @@ function NestedTableCell(props) {
             <br />
             {props.expandState.includes(props.courseCode) === true && <NestedTable courses={props.courses} />}
         </>
+    );
+}
+
+function AddCourseButton(props) {
+    const addCourse = (course) => {
+        if (props.deletedCourses.includes(course.code))
+            props.setDeletedCourses(() => props.deletedCourses.filter(c => c !== course.code));
+        else
+            props.setAddedCourses(() => [...props.addedCourses, course.code]);
+
+        if(props.course.preparatoryCourse)
+        {
+            let aux = [...props.preparatory, props.course.preparatoryCourse];
+            props.setPreparatory(aux);
+        }
+
+        // NOT SURE IF I SHOULD CHECK IF THE COURSE IS ALREADY PRESENT IN THE STUDY PLAN, SINCE IF IT IS, ITS ROW IN THE COURSES TABLE WOULD HAVE THE 'ADD' BUTTON REPLACED BY A DISABLED 'CHECK'BUTTON
+        props.setStudyPlan(() => [...props.studyPlan, course]);
+    }
+
+    return (
+        props.added === false ?
+            <Button disabled={props.disabled} variant={props.disabled ? "secondary" : "success"} size="sm" onClick={() => { addCourse(props.course) }}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
+                    <path fillRule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
+                </svg></Button>
+            :
+            <Button disabled size="sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-check-lg" viewBox="0 0 16 16">
+                    <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z" />
+                </svg></Button>
     );
 }
 
