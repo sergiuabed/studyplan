@@ -36,7 +36,7 @@ function Content(props) {
                     <Col sm={"5"}>
                         {<div>
                             <div className='tableDiv'>
-                                <StudyPlanTable incompatible={props.incompatible} setIncompatible={props.setIncompatible} preparatory={props.preparatory} setPreparatory={props.setPreparatory} deletedCourses={props.deletedCourses} setDeletedCourses={props.setDeletedCourses} addedCourses={props.addedCourses} setAddedCourses={props.setAddedCourses} courses={props.courses} studyPlan={props.studyPlan} />
+                                <StudyPlanTable incompatible={props.incompatible} setIncompatible={props.setIncompatible} preparatory={props.preparatory} setPreparatory={props.setPreparatory} deletedCourses={props.deletedCourses} setDeletedCourses={props.setDeletedCourses} addedCourses={props.addedCourses} setAddedCourses={props.setAddedCourses} courses={props.courses} setCourses={props.setCourses} studyPlan={props.studyPlan} setStudyPlan={props.setStudyPlan}/>
                             </div>
                         </div>}
 

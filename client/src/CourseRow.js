@@ -15,10 +15,17 @@ function CourseRow(props) {
     }
 
     const highlightRow = () => {
-        if (props.incompatible.includes(props.course.code))
-            return "incompatibleCourse";
+        //if (props.incompatible.includes(props.course.code))
+        //    return "incompatibleCourse";
 
         let studyPlanCodes = props.studyPlan.map(c => c.code);
+
+        if(props.course.incompatibleWith){
+            let incomp = props.course.incompatibleWith.map(c => studyPlanCodes.includes(c)).reduce((acc, c) => acc || c);
+            if (incomp)
+                return "incompatibleCourse";
+        }
+
         if (props.course.preparatoryCourse !== null && !studyPlanCodes.includes(props.course.preparatoryCourse))
             return "needsPreparatoryCourse"
 
@@ -92,13 +99,6 @@ function AddCourseButton(props) {
         if (props.course.preparatoryCourse) {
             //let aux = [...props.preparatory, props.course.preparatoryCourse];
             props.setPreparatory((prepCourses) => [...prepCourses, props.course.preparatoryCourse]);
-        }
-
-        if (props.course.incompatibleWith)
-        {   //IMPORTANT: it's not the case for the full list of courses stored in the DB if this project, but it could be possible
-            //           that 2 or more courses could have the same incompatible course
-            //let aux = [...props.incompatible, ...props.course.incompatibleWith];
-            props.setIncompatible((incompatible) => [...incompatible, ...props.course.incompatibleWith]);
         }
 
         // NOT SURE IF I SHOULD CHECK IF THE COURSE IS ALREADY PRESENT IN THE STUDY PLAN, SINCE IF IT IS, ITS ROW IN THE COURSES TABLE WOULD HAVE THE 'ADD' BUTTON REPLACED BY A DISABLED 'CHECK'BUTTON
