@@ -1,16 +1,20 @@
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Alert } from 'react-bootstrap';
 import { Outlet } from 'react-router-dom';
 import StudyPlanNavbar from './StudyPlanNavbar';
+import { useState } from 'react';
 
 function Layout(props) {
     return (
-        <Container fluid className='container-style'>
+        <Container fluid>
             <Row>
                 <Col className="navBar">
-                    <StudyPlanNavbar user={props.user} loggedIn={ props.loggedIn } handleLogout={props.handleLogout}/>
+                    <StudyPlanNavbar user={props.user} loggedIn={props.loggedIn} handleLogout={props.handleLogout} />
                 </Col>
             </Row>
-            <Outlet/>
+            <Outlet />
+            {props.message!== '' && <Alert variant="danger" className='alertBottom' onClose={() => props.setMessage('')} dismissible>
+                {props.message}
+            </Alert>}
         </Container>
     );
 }

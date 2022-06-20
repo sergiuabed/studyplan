@@ -28,6 +28,8 @@ function App() {
                                                             // a course cannot be added to SP unless its preparatory course (if any) is present in SP
                                                             // a preparatory course cannot be removed from the SP unless the course having this preparatory course is removed first
 
+  const [message, setMessage] = useState('');
+  
   const initPreparatoryIncompatible = (sp) => {
     let auxIncomp = [];
     let auxPrep = [];
@@ -78,7 +80,9 @@ function App() {
       console.log(u);
       setUser(u);
       setLoggedIn(true);
+      setMessage('');
     }catch(err){
+      setMessage("Username and/or password wrong!");
       console.log(err);
     }
   }
@@ -96,8 +100,8 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path='/' element={<Layout user={user} loggedIn={ loggedIn } handleLogout={handleLogout}/>}>
-          <Route path='/' element={<Content incompatible={incompatible} git preparatory={preparatory} setPreparatory={setPreparatory} deletedCourses={deletedCourses} setDeletedCourses={setDeletedCourses} addedCourses={addedCourses} setAddedCourses={setAddedCourses } user={user} studyPlan={studyPlan} setStudyPlan={setStudyPlan} courses={courses} expandIncompatible={expandIncompatible} setExpandIncompatible={setExpandIncompatible} expandPreparatory={expandPreparatory} setExpandPreparatory={setExpandPreparatory} loggedIn={loggedIn}/>} />
+        <Route path='/' element={<Layout message={message} setMessage={setMessage} user={user} loggedIn={ loggedIn } handleLogout={handleLogout}/>}>
+          <Route path='/' element={<Content incompatible={incompatible} preparatory={preparatory} setPreparatory={setPreparatory} deletedCourses={deletedCourses} setDeletedCourses={setDeletedCourses} addedCourses={addedCourses} setAddedCourses={setAddedCourses } user={user} studyPlan={studyPlan} setStudyPlan={setStudyPlan} courses={courses} expandIncompatible={expandIncompatible} setExpandIncompatible={setExpandIncompatible} expandPreparatory={expandPreparatory} setExpandPreparatory={setExpandPreparatory} loggedIn={loggedIn}/>} />
           <Route path='/login' element={loggedIn===false ? <LoginForm handleLogin={handleLogin}/> : <Navigate replace to='/' />} />{/* '/login' path is not accessible while a user is logged in. It becomes accessible after logout */}
         </Route>
       </Routes>

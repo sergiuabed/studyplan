@@ -1,3 +1,7 @@
+html {
+    background-color: rgb(245, 245, 245);;
+}
+
 .main-row {
     position: relative;
     top: 70px;
@@ -9,7 +13,7 @@
     position: relative;
     top: 63px;
     /*min-height: 100%;*/
-    background-color: rgb(245, 245, 245);
+    /*background-color: rgb(245, 245, 245);*/
 }
 
 .side-column {
@@ -46,7 +50,7 @@
 }
 
 .login {
-    background-color: rgb(235, 235, 235);
+    background-color: rgb(201, 201, 201);
     position: absolute;
     top: 30%;
     padding: 2rem;
@@ -82,4 +86,10 @@
 .needsPreparatoryCourse {
     background-color: #fff3cd;
     color: #664d03;
+}
+
+.alertBottom {
+    position: fixed;
+    bottom: 0.5rem;
+    width: 98.6%;
 }
