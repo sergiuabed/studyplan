@@ -12,7 +12,7 @@ function StudyPlanTable(props) {
                 </tr>
             </thead>
             <tbody>
-                {props.courses.map(c => (<StudyPlanRow key={c.code} course={c} />))}
+                {props.studyPlan.map(c => (<StudyPlanRow key={c.code} course={c} />))}
             </tbody>
         </Table>
     );

@@ -28,7 +28,7 @@ function Content(props) {
             <Row className="main-row justify-content-around">
                 <Col sm={"7"}>
                     {<div className='tableDiv'>
-                        <CoursesTable incompatible={props.incompatible} preparatory={props.preparatory} deletedCourses={props.deletedCourses} setDeletedCourses={props.setDeletedCourses} addedCourses={props.addedCourses} setAddedCourses={props.setAddedCourses} loggedIn={props.loggedIn} courses={props.courses} studyPlan={props.studyPlan} setStudyPlan={props.setStudyPlan} expandIncompatible={props.expandIncompatible} setExpandIncompatible={props.setExpandIncompatible} expandPreparatory={props.expandPreparatory} setExpandPreparatory={props.setExpandPreparatory} />
+                        <CoursesTable incompatible={props.incompatible} setIncompatible={props.setIncompatible} preparatory={props.preparatory} setPreparatory={props.setPreparatory} deletedCourses={props.deletedCourses} setDeletedCourses={props.setDeletedCourses} addedCourses={props.addedCourses} setAddedCourses={props.setAddedCourses} loggedIn={props.loggedIn} courses={props.courses} studyPlan={props.studyPlan} setStudyPlan={props.setStudyPlan} expandIncompatible={props.expandIncompatible} setExpandIncompatible={props.setExpandIncompatible} expandPreparatory={props.expandPreparatory} setExpandPreparatory={props.setExpandPreparatory} />
                     </div>}
                     {/*<CoursesTable courses={props.courses} expandIncompatible={props.expandIncompatible} setExpandIncompatible={props.setExpandIncompatible} expandPreparatory={props.expandPreparatory} setExpandPreparatory={props.setExpandPreparatory} />*/}
                 </Col>
@@ -36,7 +36,7 @@ function Content(props) {
                     <Col sm={"5"}>
                         {<div>
                             <div className='tableDiv'>
-                                <StudyPlanTable incompatible={props.incompatible} preparatory={props.preparatory} deletedCourses={props.deletedCourses} setDeletedCourses={props.setDeletedCourses} addedCourses={props.addedCourses} setAddedCourses={props.setAddedCourses} courses={props.studyPlan} />
+                                <StudyPlanTable incompatible={props.incompatible} setIncompatible={props.setIncompatible} preparatory={props.preparatory} setPreparatory={props.setPreparatory} deletedCourses={props.deletedCourses} setDeletedCourses={props.setDeletedCourses} addedCourses={props.addedCourses} setAddedCourses={props.setAddedCourses} courses={props.courses} studyPlan={props.studyPlan} />
                             </div>
                         </div>}
 

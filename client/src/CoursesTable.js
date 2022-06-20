@@ -17,7 +17,7 @@ function CoursesTable(props) {
                 </tr>
             </thead>
             <tbody>
-                { props.courses.map(c => (<CourseRow incompatible={props.incompatible} preparatory={props.preparatory} loggedIn={props.loggedIn} key={c.code} course={c} allCourses={props.courses} studyPlan={props.studyPlan} setStudyPlan={props.setStudyPlan} expandIncompatible={props.expandIncompatible} setExpandIncompatible={props.setExpandIncompatible} expandPreparatory={props.expandPreparatory} setExpandPreparatory={props.setExpandPreparatory} deletedCourses={props.deletedCourses} setDeletedCourses={props.setDeletedCourses} addedCourses={props.addedCourses} setAddedCourses={props.setAddedCourses}/>)) }
+                { props.courses.map(c => (<CourseRow incompatible={props.incompatible} setIncompatible={props.setIncompatible} preparatory={props.preparatory} setPreparatory={props.setPreparatory} loggedIn={props.loggedIn} key={c.code} course={c} allCourses={props.courses} studyPlan={props.studyPlan} setStudyPlan={props.setStudyPlan} expandIncompatible={props.expandIncompatible} setExpandIncompatible={props.setExpandIncompatible} expandPreparatory={props.expandPreparatory} setExpandPreparatory={props.setExpandPreparatory} deletedCourses={props.deletedCourses} setDeletedCourses={props.setDeletedCourses} addedCourses={props.addedCourses} setAddedCourses={props.setAddedCourses}/>)) }
             </tbody>
         </Table>
     );

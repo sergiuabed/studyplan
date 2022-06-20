@@ -97,7 +97,7 @@ function App() {
     <Router>
       <Routes>
         <Route path='/' element={<Layout user={user} loggedIn={ loggedIn } handleLogout={handleLogout}/>}>
-          <Route path='/' element={<Content incompatible={incompatible} preparatory={preparatory} deletedCourses={deletedCourses} setDeletedCourses={setDeletedCourses} addedCourses={addedCourses} setAddedCourses={setAddedCourses } user={user} studyPlan={studyPlan} setStudyPlan={setStudyPlan} courses={courses} expandIncompatible={expandIncompatible} setExpandIncompatible={setExpandIncompatible} expandPreparatory={expandPreparatory} setExpandPreparatory={setExpandPreparatory} loggedIn={loggedIn}/>} />
+          <Route path='/' element={<Content incompatible={incompatible} git preparatory={preparatory} setPreparatory={setPreparatory} deletedCourses={deletedCourses} setDeletedCourses={setDeletedCourses} addedCourses={addedCourses} setAddedCourses={setAddedCourses } user={user} studyPlan={studyPlan} setStudyPlan={setStudyPlan} courses={courses} expandIncompatible={expandIncompatible} setExpandIncompatible={setExpandIncompatible} expandPreparatory={expandPreparatory} setExpandPreparatory={setExpandPreparatory} loggedIn={loggedIn}/>} />
           <Route path='/login' element={loggedIn===false ? <LoginForm handleLogin={handleLogin}/> : <Navigate replace to='/' />} />{/* '/login' path is not accessible while a user is logged in. It becomes accessible after logout */}
         </Route>
       </Routes>

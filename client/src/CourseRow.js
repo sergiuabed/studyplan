@@ -17,9 +17,9 @@ function CourseRow(props) {
     const highlightRow = () => {
         if (props.incompatible.includes(props.course.code))
             return "incompatibleCourse";
-        
+
         let studyPlanCodes = props.studyPlan.map(c => c.code);
-        if(props.course.preparatoryCourse !== null && !studyPlanCodes.includes(props.course.preparatoryCourse))
+        if (props.course.preparatoryCourse !== null && !studyPlanCodes.includes(props.course.preparatoryCourse))
             return "needsPreparatoryCourse"
 
         return "";
@@ -34,8 +34,8 @@ function CourseRow(props) {
     }
 
     return (
-        <tr className={ props.loggedIn ===true ? highlightRow() : ""}>
-            {props.loggedIn === true && <td><AddCourseButton added={added()} highlightRow={highlightRow} disabled={highlightRow() === "incompatibleCourse"} course={props.course} deletedCourses={props.deletedCourses} setDeletedCourses={props.setDeletedCourses} addedCourses={props.addedCourses} setAddedCourses={props.setAddedCourses} studyPlan={props.studyPlan} setStudyPlan={props.setStudyPlan} /></td>}
+        <tr className={props.loggedIn === true ? highlightRow() : ""}>
+            {props.loggedIn === true && <td><AddCourseButton added={added()} highlightRow={highlightRow()} disabled={highlightRow() === "incompatibleCourse"} incompatible={props.incompatible} setIncompatible={props.setIncompatible} preparatory={props.preparatory} setPreparatory={props.setPreparatory} course={props.course} deletedCourses={props.deletedCourses} setDeletedCourses={props.setDeletedCourses} addedCourses={props.addedCourses} setAddedCourses={props.setAddedCourses} studyPlan={props.studyPlan} setStudyPlan={props.setStudyPlan} /></td>}
             <td>{props.course.code}</td>
             <td>{props.course.name}</td>
             <td>{props.course.credits}</td>
@@ -81,31 +81,68 @@ function NestedTableCell(props) {
 
 function AddCourseButton(props) {
     const addCourse = (course) => {
-        if (props.deletedCourses.includes(course.code))
-            props.setDeletedCourses(() => props.deletedCourses.filter(c => c !== course.code));
-        else
-            props.setAddedCourses(() => [...props.addedCourses, course.code]);
+        if (props.deletedCourses.includes(course.code)) {
+            //props.setDeletedCourses(() => props.deletedCourses.filter(c => c !== course.code));
+            props.setDeletedCourses((deletedCourses) => deletedCourses.filter(c => c !== course.code));
+        } else
+            props.setAddedCourses((addedCourses) => [...addedCourses, course.code]);
 
-        if(props.course.preparatoryCourse)
-        {
-            let aux = [...props.preparatory, props.course.preparatoryCourse];
-            props.setPreparatory(aux);
+        props.setStudyPlan((studyPlan) => [...studyPlan, course]);
+
+        if (props.course.preparatoryCourse) {
+            //let aux = [...props.preparatory, props.course.preparatoryCourse];
+            props.setPreparatory((prepCourses) => [...prepCourses, props.course.preparatoryCourse]);
+        }
+
+        if (props.course.incompatibleWith)
+        {   //IMPORTANT: it's not the case for the full list of courses stored in the DB if this project, but it could be possible
+            //           that 2 or more courses could have the same incompatible course
+            //let aux = [...props.incompatible, ...props.course.incompatibleWith];
+            props.setIncompatible((incompatible) => [...incompatible, ...props.course.incompatibleWith]);
         }
 
         // NOT SURE IF I SHOULD CHECK IF THE COURSE IS ALREADY PRESENT IN THE STUDY PLAN, SINCE IF IT IS, ITS ROW IN THE COURSES TABLE WOULD HAVE THE 'ADD' BUTTON REPLACED BY A DISABLED 'CHECK'BUTTON
-        props.setStudyPlan(() => [...props.studyPlan, course]);
+        //props.setStudyPlan(() => [...props.studyPlan, course]);
+    }
+
+    //return (
+    //    props.added === false ?
+    //        <Button disabled={props.disabled} variant={props.disabled ? "secondary" : "success"} size="sm" onClick={() => { addCourse(props.course) }}>
+    //            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
+    //                <path fillRule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
+    //            </svg></Button>
+    //        :
+    //        <Button disabled size="sm">
+    //            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-check-lg" viewBox="0 0 16 16">
+    //                <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z" />
+    //            </svg></Button>
+    //);
+
+    if (props.highlightRow) {
+        return (
+            props.highlightRow === "incompatibleCourse" ?
+                <Button disabled variant="secondary" size="sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
+                        <path fillRule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
+                    </svg></Button>
+                :
+                <Button disabled variant="warning" size="sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-exclamation-lg" viewBox="0 0 16 16">
+                        <path d="M7.005 3.1a1 1 0 1 1 1.99 0l-.388 6.35a.61.61 0 0 1-1.214 0L7.005 3.1ZM7 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0Z" />
+                    </svg></Button>
+        );
     }
 
     return (
-        props.added === false ?
-            <Button disabled={props.disabled} variant={props.disabled ? "secondary" : "success"} size="sm" onClick={() => { addCourse(props.course) }}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
-                    <path fillRule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
-                </svg></Button>
-            :
+        props.added ?
             <Button disabled size="sm">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-check-lg" viewBox="0 0 16 16">
                     <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z" />
+                </svg></Button>
+            :
+            <Button variant="success" size="sm" onClick={() => { addCourse(props.course) }}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
+                    <path fillRule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
                 </svg></Button>
     );
 }
