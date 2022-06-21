@@ -21,7 +21,7 @@ const getUser = (email, password) => {
                 resolve(false);
             }
             else {
-                const user = { id: row.id, email: row.email, name: row.name, surname: row.surname, tableName: row.tableName, type: row.type }
+                const user = { id: row.id, email: row.email, name: row.name, surname: row.surname, tableName: row.tableName};//, type: row.type }
                 try {
                     crypto.scrypt(password, Buffer.from(row.salt, 'hex'), 32, (err, hashedPassword) => {
                         if (err)
@@ -69,4 +69,20 @@ const getStudyPlan = (user) => {
     });
 }
 
-module.exports = { getAllCourses, getStudyPlan, getUser };
+const getStudyPlanType = (user) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT type FROM users WHERE email=?';
+        db.all(sql, [user.email], (err, rows) => {
+            if(err)
+                reject(err);
+            else{
+                const type = rows[0].type;
+                console.log(`The type of user ${user.surname} is `);
+                console.log(type);
+                resolve(type);
+            }
+        });
+    });
+}
+
+module.exports = { getAllCourses, getStudyPlan, getUser, getStudyPlanType };

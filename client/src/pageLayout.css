@@ -93,3 +93,11 @@ html {
     bottom: 0.5rem;
     width: 98.6%;
 }
+
+.studyplanChoiceButton {
+    margin: 1rem;
+}
+
+.coloredCount {
+    color: #ff9999;
+}

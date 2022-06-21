@@ -78,8 +78,10 @@ app.get('/api/studyplan', isLoggedIn, async (req, res) => { //MODIFY THIS API AC
   }
 });
 
-app.post('/api/sessions', passport.authenticate('local'), (req, res) => {
-  res.status(201).json(req.user);
+app.post('/api/sessions', passport.authenticate('local'), async (req, res) => {
+  let type = await dao.getStudyPlanType(req.user);
+  let usr = {...req.user, type: type};
+  res.status(201).json(usr);
 });
 
 app.get('/api/sessions/current', (req, res) => {

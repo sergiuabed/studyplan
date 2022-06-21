@@ -1,4 +1,3 @@
-import { Course } from "./course";
 
 const serverURL = 'http://localhost:3001/api';
 
@@ -25,8 +24,7 @@ const logout = async () => {
         credentials: 'include'
     });
 
-    if(!response.ok)
-    {
+    if (!response.ok) {
         const err = await response.text();
         console.log(err);
         throw err;
@@ -35,7 +33,7 @@ const logout = async () => {
 
 const getAllCourses = async () => {
     try {
-        const response = await fetch(serverURL + '/courses', {credentials: 'include'});
+        const response = await fetch(serverURL + '/courses', { credentials: 'include' });
         if (response.ok) {
             const courses = await response.json();
             //let coursesArr = courses.map( (e) => new Course(e.code, e.name, e.credits, e.maxStudents, e.incompatibleWith, ) )
@@ -52,7 +50,7 @@ const getAllCourses = async () => {
 
 const getStudyPlan = async () => {  //"user" WILL BE UNNECESSARY WHEN IMPLEMENTING THE USER SESSION
     try {
-        const response = await fetch(serverURL + '/studyplan', {credentials: 'include'});
+        const response = await fetch(serverURL + '/studyplan', { credentials: 'include' });
         if (response.ok) {
             const courses = await response.json();
             return courses;
@@ -66,5 +64,28 @@ const getStudyPlan = async () => {  //"user" WILL BE UNNECESSARY WHEN IMPLEMENTI
     }
 }
 
-const API = { getAllCourses, getStudyPlan, login, logout };
+const putStudyPlan = async (addedCourses, deletedCourses, user) => {
+    try {
+        const response = await fetch(serverURL + '/studyplan',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: { 'Content-type': 'application/json' },
+                body: JSON.stringify({ addedCourses: addedCourses, deletedCourses: deletedCourses, type: user.type })
+            });
+
+        if (response.ok) {
+            return "Study plan saved successfully!";
+        }else{
+            const text = await response.text();
+            throw new TypeError(text);
+        }
+
+    } catch (err) {
+        console.log(err);
+        throw err; // to be catched
+    }
+}
+
+const API = { getAllCourses, getStudyPlan, login, logout, putStudyPlan };
 export default API;

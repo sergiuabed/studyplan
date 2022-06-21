@@ -1,9 +1,30 @@
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import CoursesTable from './CoursesTable';
 import { StudyPlanTable } from './StudyPlan';
+import API from './API';
 
 function Content(props) {
     const nrCredits = props.studyPlan.map(c => c.credits).reduce((acc, c) => acc + c, 0);
+
+    const saveStudyPlan = () => {
+        try {
+            const msg = API.putStudyPlan(props.addedCourses, props.deletedCourses, props.user);
+            props.setMessage(msg);
+        }catch(err){
+            props.setMessage(err);
+        }
+    }
+
+    const cancelModifications = () => {
+        let restoredStudyPlan = props.studyPlan.filter(c => !props.addedCourses.includes(c.code));
+        let removed = props.courses.filter(c => props.deletedCourses.includes(c.code));
+
+        restoredStudyPlan = [...restoredStudyPlan, ...removed];
+        props.setStudyPlan(restoredStudyPlan);
+
+        props.setAddedCourses([]);
+        props.setDeletedCourses([]);
+    }
 
     return (
         <>
@@ -18,7 +39,7 @@ function Content(props) {
                             <div className={"topButton"}><Button>Delete Study Plan</Button></div>*/}
                             <Row>
                                 <Col sm={"3"}><div className='topButtons'><Button size="sm" variant="outline-success" className={"topButton"}>Save Modifications</Button></div></Col>
-                                <Col sm={"3"}><div className='topButtons'><Button size="sm" variant="outline-warning" className={"topButton"}>Cancel Modifications</Button></div></Col>
+                                <Col sm={"3"}><div className='topButtons'><Button onClick={cancelModifications} size="sm" variant="outline-warning" className={"topButton"}>Cancel Modifications</Button></div></Col>
                                 <Col sm={"3"}><div className='topButtons'><Button size="sm" variant="outline-danger" className={"topButton"}>Delete Study Plan</Button></div></Col>
                             </Row>
                         </Col>
@@ -38,9 +59,12 @@ function Content(props) {
                 {props.loggedIn === true &&
                     <Col sm={"5"}>
                         {<div>
-                            <div className='tableDiv'>
-                                <StudyPlanTable incompatible={props.incompatible} setIncompatible={props.setIncompatible} preparatory={props.preparatory} setPreparatory={props.setPreparatory} deletedCourses={props.deletedCourses} setDeletedCourses={props.setDeletedCourses} addedCourses={props.addedCourses} setAddedCourses={props.setAddedCourses} courses={props.courses} setCourses={props.setCourses} studyPlan={props.studyPlan} setStudyPlan={props.setStudyPlan} />
-                            
+                            <div className='tableDiv'>{
+                                props.user.type !== "-" ?
+                                    <StudyPlanTable user={props.user} incompatible={props.incompatible} setIncompatible={props.setIncompatible} preparatory={props.preparatory} setPreparatory={props.setPreparatory} deletedCourses={props.deletedCourses} setDeletedCourses={props.setDeletedCourses} addedCourses={props.addedCourses} setAddedCourses={props.setAddedCourses} courses={props.courses} setCourses={props.setCourses} studyPlan={props.studyPlan} setStudyPlan={props.setStudyPlan} />
+                                    :
+                                    <StudyPlanTypeForm user={props.user} setUser={props.setUser} />
+                            }
                             </div>
                         </div>}
 
@@ -114,6 +138,26 @@ function Legend() {
                         <path d="M7.005 3.1a1 1 0 1 1 1.99 0l-.388 6.35a.61.61 0 0 1-1.214 0L7.005 3.1ZM7 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0Z" />
                     </svg></Button> this is a preparatory course; delete the course that needs it first
             </Col>
+        </>
+    );
+}
+
+function StudyPlanTypeForm(props) {
+    return (
+        <>
+            <h3>Study plan not defined. Choose a type:</h3>
+
+            <Button className='studyplanChoiceButton' onClick={() => {
+                let usr = { ...props.user };
+                usr.type = "full-time";
+                props.setUser(usr);
+            }}>Full-time</Button>
+
+            <Button className='studyplanChoiceButton' variant="success" onClick={() => {
+                let usr = { ...props.user };
+                usr.type = "part-time";
+                props.setUser(usr);
+            }}>Part-time</Button>
         </>
     );
 }
