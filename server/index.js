@@ -100,6 +100,7 @@ app.put('/api/studyplan', isLoggedIn, async (req, res) => {
 
     // check credits boundaries
     await dao.createTEMPTABLE();
+    await dao.emptyTable("TEMPTABLE");
     await dao.populateTEMPTABLE(studyPlan);
     let totCredits = await dao.creditsInTEMPTABLE();
 
@@ -122,21 +123,26 @@ app.put('/api/studyplan', isLoggedIn, async (req, res) => {
       res.status(422).send("The defined study plan does not respect the number of credits boundaries!");
       await dao.emptyTable("TEMPTABLE");
       return;
-    }else{
+    } else {
       console.log("Min-max constraints for nr of credits respected!");
     }
 
     await dao.emptyTable("TEMPTABLE");
 
-    // increment enrolled students for added courses
-    await dao.populateTEMPTABLE(addedCourses);
-    await dao.incrementEnrolledStudents();  // looks in TEMPTABLE for courses to be updated
-    await dao.emptyTable("TEMPTABLE");
+    if (addedCourses.length !== 0) {
+      // increment enrolled students for added courses
+      await dao.populateTEMPTABLE(addedCourses);
+      await dao.incrementEnrolledStudents();  // looks in TEMPTABLE for courses to be updated
+      await dao.emptyTable("TEMPTABLE");
+    }
 
-    // decrement enrolled students for deleted courses
-    await dao.populateTEMPTABLE(deletedCourses);
-    await dao.decrementEnrolledStudents();  // looks in TEMPTABLE for courses to be updated
-    await dao.emptyTable("TEMPTABLE");
+    if (deletedCourses.length !== 0) {
+      // decrement enrolled students for deleted courses
+      await dao.populateTEMPTABLE(deletedCourses);
+      await dao.decrementEnrolledStudents();  // looks in TEMPTABLE for courses to be updated
+      await dao.emptyTable("TEMPTABLE");
+    
+    }
     
     // insert new studyplan
     await dao.populateTEMPTABLE(studyPlan);
@@ -151,6 +157,34 @@ app.put('/api/studyplan', isLoggedIn, async (req, res) => {
 
     res.status(201).end();
     console.log("Study plan type should have been updated");
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+app.delete('/api/studyplan', isLoggedIn, async (req, res) => {
+  try {
+    let deletedCourses = req.body.deletedCourses; // contains the codes of the courses
+
+    // decrement enrolled students for deleted courses
+    await dao.createTEMPTABLE();
+    await dao.emptyTable("TEMPTABLE");
+    await dao.populateTEMPTABLE(deletedCourses);
+    await dao.decrementEnrolledStudents();  // looks in TEMPTABLE for courses to be updated
+    await dao.emptyTable("TEMPTABLE");
+
+    console.log("Courses table should be updated (some enrolled students nr decremented)");
+
+    //delete
+    await dao.emptyTable(req.user.tableName);
+
+    console.log("The study plan should be empty now");
+
+    //update study plan type in 'users' table
+    await dao.updateStudyPlanType(req.user.email, "-");
+
+    res.status(204).end();
   } catch (err) {
     console.log(err);
     res.status(500).json(err);

@@ -13,8 +13,9 @@ function Content(props) {
     const deleteStudyPlan = async () => {
         let auxDeleted = [];
         props.studyPlan.forEach(c => {auxDeleted.push(c.code)});
+        console.log(auxDeleted);
         props.setDeletedCourses(auxDeleted);
-        props.setDeletedCourses((d) => (d+1));
+        props.setDeleteAction((d) => (d+1));
     }
 
     const cancelModifications = () => {

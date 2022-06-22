@@ -72,12 +72,12 @@ const putStudyPlan = async (studyPlan, addedCourses, deletedCourses, type) => {
                 method: 'PUT',
                 credentials: 'include',
                 headers: { 'Content-type': 'application/json' },
-                body: JSON.stringify({studyPlan, addedCourses, deletedCourses, type })
+                body: JSON.stringify({ studyPlan, addedCourses, deletedCourses, type })
             });
 
         if (response.ok) {
             return "Study plan saved successfully!";
-        }else{
+        } else {
             const text = await response.text();
             throw new TypeError(text);
         }
@@ -88,5 +88,28 @@ const putStudyPlan = async (studyPlan, addedCourses, deletedCourses, type) => {
     }
 }
 
-const API = { getAllCourses, getStudyPlan, login, logout, putStudyPlan };
+const deleteStudyPlan = async (deletedCourses) => {
+    try {
+        const response = await fetch(serverURL + '/studyplan',
+            {
+                method: 'DELETE',
+                credentials: 'include',
+                headers: { 'Content-type': 'application/json' },
+                body: JSON.stringify({ deletedCourses })
+            });
+
+        if (response.ok) {
+            return "Study plan deleted!";
+        } else {
+            const text = await response.text();
+            throw new TypeError(text);
+        }
+
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+}
+
+const API = { getAllCourses, getStudyPlan, login, logout, putStudyPlan, deleteStudyPlan };
 export default API;

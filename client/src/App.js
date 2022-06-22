@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Layout from './Layout';
 import Content from './Content';
 import LoginForm from './LoginForm';
+import { propTypes } from 'react-bootstrap/esm/Image';
 
 function App() {
 
@@ -68,10 +69,11 @@ function App() {
 
   useEffect(() => {
     const sendModifications = async () => {
-      
+
       try {
 
-        if (addedCourses.length !== 0 && deletedCourses.length !== 0) {
+        if (addedCourses.length !== 0 || deletedCourses.length !== 0) {
+
           let sp = studyPlan.map(c => c.code);
           const msg = await API.putStudyPlan(sp, addedCourses, deletedCourses, user.type);
           setMessage(msg);
@@ -92,13 +94,37 @@ function App() {
       }
     }
 
-    if(saveAction !== 0)
+    if (saveAction !== 0)
       sendModifications();
 
   }, [saveAction]);
 
   useEffect(() => {
-    //DELETE IMPLEMENTATION
+    const deleteStudyPlan = async () => {
+      try {
+        if (deletedCourses.length !== 0) {
+          const msg = await API.deleteStudyPlan(deletedCourses);
+          setMessage(msg);
+          
+          //  reset addedCourses and deletedCourses states
+          setAddedCourses([]);
+          setDeletedCourses([]);
+
+          // retrieve the updated full course list (nr of enrolled students is updated after saving)
+          let c = await API.getAllCourses();
+          setCourses(c);
+
+        }else{
+          setMessage("No courses to delete");
+        }
+      }catch (err){
+        setMessage(err.message);
+      }
+    }
+
+    if (deleteAction !== 0)
+      deleteStudyPlan();
+
   }, [deleteAction]);
 
   const handleLogin = async (username, password) => {
