@@ -120,8 +120,8 @@ app.put('/api/studyplan', isLoggedIn, async (req, res) => {
     }
 
     if (totCredits < min || totCredits > max) {
-      res.status(422).send("The defined study plan does not respect the number of credits boundaries!");
       await dao.emptyTable("TEMPTABLE");
+      res.status(422).send("The defined study plan does not respect the number of credits boundaries!");
       return;
     } else {
       console.log("Min-max constraints for nr of credits respected!");
@@ -143,7 +143,8 @@ app.put('/api/studyplan', isLoggedIn, async (req, res) => {
       await dao.emptyTable("TEMPTABLE");
     
     }
-    
+
+    await dao.emptyTable("TEMPTABLE");
     // insert new studyplan
     await dao.populateTEMPTABLE(studyPlan);
     await dao.emptyTable(req.user.tableName);

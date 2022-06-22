@@ -7,7 +7,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Layout from './Layout';
 import Content from './Content';
 import LoginForm from './LoginForm';
-import { propTypes } from 'react-bootstrap/esm/Image';
 
 function App() {
 
@@ -50,7 +49,7 @@ function App() {
     loadCourses();
   }, [saveAction, deleteAction]);
 
-  useEffect(() => { // MODIFY THIS ACCORDINGLY WHEN IMPLEMENTING THE USER SESSIONS
+  useEffect(() => {
     const loadStudyPlan = async () => {
       let c = await API.getStudyPlan(); // codes of the courses in the study plan
       let crs = courses.filter(e => c.includes(e.code));  // courses corresponding to the codes in 'c'
@@ -91,6 +90,16 @@ function App() {
         }
       } catch (err) {
         setMessage(err.message);
+
+        let restoredStudyPlan = studyPlan.filter(c => !addedCourses.includes(c.code));
+        let removed = courses.filter(c => deletedCourses.includes(c.code));
+
+        restoredStudyPlan = [...restoredStudyPlan, ...removed];
+        setStudyPlan(restoredStudyPlan);
+
+        setAddedCourses([]);
+        setDeletedCourses([]);
+
       }
     }
 
@@ -147,8 +156,6 @@ function App() {
     setPreparatory([]);
     setAddedCourses([]);
     setDeletedCourses([]);
-    //setExpandIncompatible([]);
-    //setExpandPreparatory([]);
   }
 
   return (
@@ -156,7 +163,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Layout message={message} setMessage={setMessage} user={user} loggedIn={loggedIn} handleLogout={handleLogout} />}>
           <Route path='/' element={<Content saveAction={saveAction} setSaveAction={setSaveAction} deleteAction={deleteAction} setDeleteAction={setDeleteAction} message={message} setMessage={setMessage} preparatory={preparatory} setPreparatory={setPreparatory} deletedCourses={deletedCourses} setDeletedCourses={setDeletedCourses} addedCourses={addedCourses} setAddedCourses={setAddedCourses} user={user} setUser={setUser} studyPlan={studyPlan} setStudyPlan={setStudyPlan} courses={courses} setCourses={setCourses} expandIncompatible={expandIncompatible} setExpandIncompatible={setExpandIncompatible} expandPreparatory={expandPreparatory} setExpandPreparatory={setExpandPreparatory} loggedIn={loggedIn} />} />
-          <Route path='/login' element={loggedIn === false ? <LoginForm handleLogin={handleLogin} /> : <Navigate replace to='/' />} />{/* '/login' path is not accessible while a user is logged in. It becomes accessible after logout */}
+          <Route path='/login' element={loggedIn === false ? <LoginForm handleLogin={handleLogin} /> : <Navigate replace to='/' />} />
         </Route>
       </Routes>
     </Router>
