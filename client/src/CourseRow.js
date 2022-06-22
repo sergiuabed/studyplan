@@ -42,7 +42,7 @@ function CourseRow(props) {
 
     return (
         <tr className={props.loggedIn === true ? highlightRow() : ""}>
-            {props.loggedIn === true && <td><AddCourseButton added={added()} highlightRow={highlightRow()} disabled={highlightRow() === "incompatibleCourse"} incompatible={props.incompatible} setIncompatible={props.setIncompatible} preparatory={props.preparatory} setPreparatory={props.setPreparatory} course={props.course} deletedCourses={props.deletedCourses} setDeletedCourses={props.setDeletedCourses} addedCourses={props.addedCourses} setAddedCourses={props.setAddedCourses} studyPlan={props.studyPlan} setStudyPlan={props.setStudyPlan} /></td>}
+            {props.loggedIn === true && (props.user.type === "full-time" || props.user.type === "part-time") && <td><AddCourseButton added={added()} highlightRow={highlightRow()} disabled={highlightRow() === "incompatibleCourse"} incompatible={props.incompatible} setIncompatible={props.setIncompatible} preparatory={props.preparatory} setPreparatory={props.setPreparatory} course={props.course} deletedCourses={props.deletedCourses} setDeletedCourses={props.setDeletedCourses} addedCourses={props.addedCourses} setAddedCourses={props.setAddedCourses} studyPlan={props.studyPlan} setStudyPlan={props.setStudyPlan} /></td>}
             <td>{props.course.code}</td>
             <td>{props.course.name}</td>
             <td>{props.course.credits}</td>
@@ -140,7 +140,7 @@ function AddCourseButton(props) {
                     <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z" />
                 </svg></Button>
             :
-            <Button variant="success" size="sm" onClick={() => { addCourse(props.course) }}>
+            <Button disabled={props.course.enrolledStudents === props.course.maxStudents} variant={props.course.enrolledStudents === props.course.maxStudents ? "light" : "success"} size="sm" onClick={() => { addCourse(props.course) }}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
                     <path fillRule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
                 </svg></Button>

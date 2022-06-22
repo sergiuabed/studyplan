@@ -120,6 +120,7 @@ app.put('/api/studyplan', isLoggedIn, async (req, res) => {
 
     if (totCredits < min || totCredits > max) {
       res.status(422).send("The defined study plan does not respect the number of credits boundaries!");
+      await dao.emptyTable("TEMPTABLE");
       return;
     }else{
       console.log("Min-max constraints for nr of credits respected!");

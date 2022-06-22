@@ -101,7 +101,7 @@ const emptyTable = (tableName) => {
 
 const createTEMPTABLE = () => {
     return new Promise((resolve, reject) => {
-        const sql = 'CREATE TABLE TEMPTABLE (code PRIMARY KEY)';
+        const sql = 'CREATE TABLE IF NOT EXISTS TEMPTABLE (code PRIMARY KEY)';
         db.run(sql, [], function (err) {
             if (err)
                 reject(err);

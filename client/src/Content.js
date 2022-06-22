@@ -6,7 +6,7 @@ import API from './API';
 function Content(props) {
     const nrCredits = props.studyPlan.map(c => c.credits).reduce((acc, c) => acc + c, 0);
 
-    const saveStudyPlan = () => {
+    const saveStudyPlan = async () => {
         try {
             //const msg=undefined;
             //const msg = API.putStudyPlan(props.addedCourses, props.deletedCourses, props.user);
@@ -14,10 +14,10 @@ function Content(props) {
             //props.setMessage(msg);
 
             let sp = props.studyPlan.map(c => c.code);
-            API.putStudyPlan(sp, props.addedCourses, props.deletedCourses, props.user.type);
+            await API.putStudyPlan(sp, props.addedCourses, props.deletedCourses, props.user.type);
 
         }catch(err){
-            //props.setMessage(err);
+            props.setMessage(err.message);
         }
     }
 
@@ -55,7 +55,7 @@ function Content(props) {
             <Row className="main-row justify-content-around">
                 <Col sm={"7"}>
                     {<div className='tableDiv'>
-                        <CoursesTable incompatible={props.incompatible} setIncompatible={props.setIncompatible} preparatory={props.preparatory} setPreparatory={props.setPreparatory} deletedCourses={props.deletedCourses} setDeletedCourses={props.setDeletedCourses} addedCourses={props.addedCourses} setAddedCourses={props.setAddedCourses} loggedIn={props.loggedIn} courses={props.courses} studyPlan={props.studyPlan} setStudyPlan={props.setStudyPlan} expandIncompatible={props.expandIncompatible} setExpandIncompatible={props.setExpandIncompatible} expandPreparatory={props.expandPreparatory} setExpandPreparatory={props.setExpandPreparatory} />
+                        <CoursesTable user={props.user} incompatible={props.incompatible} setIncompatible={props.setIncompatible} preparatory={props.preparatory} setPreparatory={props.setPreparatory} deletedCourses={props.deletedCourses} setDeletedCourses={props.setDeletedCourses} addedCourses={props.addedCourses} setAddedCourses={props.setAddedCourses} loggedIn={props.loggedIn} courses={props.courses} studyPlan={props.studyPlan} setStudyPlan={props.setStudyPlan} expandIncompatible={props.expandIncompatible} setExpandIncompatible={props.setExpandIncompatible} expandPreparatory={props.expandPreparatory} setExpandPreparatory={props.setExpandPreparatory} />
                     </div>}
                     {/*<CoursesTable courses={props.courses} expandIncompatible={props.expandIncompatible} setExpandIncompatible={props.setExpandIncompatible} expandPreparatory={props.expandPreparatory} setExpandPreparatory={props.setExpandPreparatory} />*/}
                     <Row>
@@ -143,6 +143,12 @@ function Legend() {
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-exclamation-lg" viewBox="0 0 16 16">
                         <path d="M7.005 3.1a1 1 0 1 1 1.99 0l-.388 6.35a.61.61 0 0 1-1.214 0L7.005 3.1ZM7 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0Z" />
                     </svg></Button> this is a preparatory course; delete the course that needs it first
+            </Col>
+            <Col>
+                <Button variant="light" size="sm" disabled>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
+                        <path fillRule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
+                    </svg></Button> this course is full
             </Col>
         </>
     );

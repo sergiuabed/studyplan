@@ -16,7 +16,7 @@ function App() {
   const [expandPreparatory, setExpandPreparatory] = useState([]);
 
   const [loggedIn, setLoggedIn] = useState(false);
-  const [user, setUser] = useState(undefined);
+  const [user, setUser] = useState({'type': '-'});
 
   const [addedCourses, setAddedCourses] = useState([]);     // stores the codes of the courses, not the references to the courses
   const [deletedCourses, setDeletedCourses] = useState([]); // stores the codes of the courses, not the references to the courses
