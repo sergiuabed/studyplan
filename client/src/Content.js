@@ -7,18 +7,14 @@ function Content(props) {
     const nrCredits = props.studyPlan.map(c => c.credits).reduce((acc, c) => acc + c, 0);
 
     const saveStudyPlan = async () => {
-        try {
-            //const msg=undefined;
-            //const msg = API.putStudyPlan(props.addedCourses, props.deletedCourses, props.user);
-            //DECIDE WHETHER TO SEND THE MODIFIED STUDY PLAN OR THE ARRAY OF DELETED COURSES AND THE ARRAY OF ADDED COURSES
-            //props.setMessage(msg);
+        props.setSaveAction((s) => (s+1));
+    }
 
-            let sp = props.studyPlan.map(c => c.code);
-            await API.putStudyPlan(sp, props.addedCourses, props.deletedCourses, props.user.type);
-
-        }catch(err){
-            props.setMessage(err.message);
-        }
+    const deleteStudyPlan = async () => {
+        let auxDeleted = [];
+        props.studyPlan.forEach(c => {auxDeleted.push(c.code)});
+        props.setDeletedCourses(auxDeleted);
+        props.setDeletedCourses((d) => (d+1));
     }
 
     const cancelModifications = () => {
@@ -46,7 +42,7 @@ function Content(props) {
                             <Row>
                                 <Col sm={"3"}><div className='topButtons'><Button onClick={saveStudyPlan} size="sm" variant="outline-success" className={"topButton"}>Save Modifications</Button></div></Col>
                                 <Col sm={"3"}><div className='topButtons'><Button onClick={cancelModifications} size="sm" variant="outline-warning" className={"topButton"}>Cancel Modifications</Button></div></Col>
-                                <Col sm={"3"}><div className='topButtons'><Button size="sm" variant="outline-danger" className={"topButton"}>Delete Study Plan</Button></div></Col>
+                                <Col sm={"3"}><div className='topButtons'><Button onClick={deleteStudyPlan} size="sm" variant="outline-danger" className={"topButton"}>Delete Study Plan</Button></div></Col>
                             </Row>
                         </Col>
                     </Row>
@@ -55,7 +51,7 @@ function Content(props) {
             <Row className="main-row justify-content-around">
                 <Col sm={"7"}>
                     {<div className='tableDiv'>
-                        <CoursesTable user={props.user} incompatible={props.incompatible} setIncompatible={props.setIncompatible} preparatory={props.preparatory} setPreparatory={props.setPreparatory} deletedCourses={props.deletedCourses} setDeletedCourses={props.setDeletedCourses} addedCourses={props.addedCourses} setAddedCourses={props.setAddedCourses} loggedIn={props.loggedIn} courses={props.courses} studyPlan={props.studyPlan} setStudyPlan={props.setStudyPlan} expandIncompatible={props.expandIncompatible} setExpandIncompatible={props.setExpandIncompatible} expandPreparatory={props.expandPreparatory} setExpandPreparatory={props.setExpandPreparatory} />
+                        <CoursesTable user={props.user} preparatory={props.preparatory} setPreparatory={props.setPreparatory} deletedCourses={props.deletedCourses} setDeletedCourses={props.setDeletedCourses} addedCourses={props.addedCourses} setAddedCourses={props.setAddedCourses} loggedIn={props.loggedIn} courses={props.courses} studyPlan={props.studyPlan} setStudyPlan={props.setStudyPlan} expandIncompatible={props.expandIncompatible} setExpandIncompatible={props.setExpandIncompatible} expandPreparatory={props.expandPreparatory} setExpandPreparatory={props.setExpandPreparatory} />
                     </div>}
                     {/*<CoursesTable courses={props.courses} expandIncompatible={props.expandIncompatible} setExpandIncompatible={props.setExpandIncompatible} expandPreparatory={props.expandPreparatory} setExpandPreparatory={props.setExpandPreparatory} />*/}
                     <Row>
@@ -67,7 +63,7 @@ function Content(props) {
                         {<div>
                             <div className='tableDiv'>{
                                 props.user.type !== "-" ?
-                                    <StudyPlanTable user={props.user} incompatible={props.incompatible} setIncompatible={props.setIncompatible} preparatory={props.preparatory} setPreparatory={props.setPreparatory} deletedCourses={props.deletedCourses} setDeletedCourses={props.setDeletedCourses} addedCourses={props.addedCourses} setAddedCourses={props.setAddedCourses} courses={props.courses} setCourses={props.setCourses} studyPlan={props.studyPlan} setStudyPlan={props.setStudyPlan} />
+                                    <StudyPlanTable user={props.user} preparatory={props.preparatory} setPreparatory={props.setPreparatory} deletedCourses={props.deletedCourses} setDeletedCourses={props.setDeletedCourses} addedCourses={props.addedCourses} setAddedCourses={props.setAddedCourses} courses={props.courses} setCourses={props.setCourses} studyPlan={props.studyPlan} setStudyPlan={props.setStudyPlan} />
                                     :
                                     <StudyPlanTypeForm user={props.user} setUser={props.setUser} />
                             }

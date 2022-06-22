@@ -129,23 +129,28 @@ app.put('/api/studyplan', isLoggedIn, async (req, res) => {
     await dao.emptyTable("TEMPTABLE");
 
     // increment enrolled students for added courses
-    //await dao.populateTEMPTABLE(addedCourses);
-    //await dao.incrementEnrolledStudents();  // looks in TEMPTABLE for courses to be updated
-    //await dao.emptyTable("TEMPTABLE");
+    await dao.populateTEMPTABLE(addedCourses);
+    await dao.incrementEnrolledStudents();  // looks in TEMPTABLE for courses to be updated
+    await dao.emptyTable("TEMPTABLE");
 
     // decrement enrolled students for deleted courses
-    //await dao.populateTEMPTABLE(deletedCourses);
-    //await dao.decrementEnrolledStudents();  // looks in TEMPTABLE for courses to be updated
-    //await dao.emptyTable("TEMPTABLE");
+    await dao.populateTEMPTABLE(deletedCourses);
+    await dao.decrementEnrolledStudents();  // looks in TEMPTABLE for courses to be updated
+    await dao.emptyTable("TEMPTABLE");
     
     // insert new studyplan
-    //await dao.populateTEMPTABLE(studyPlan);
-    //await dao.emptyTable(req.user.tableName);
-    //await dao.copyFromTEMPTABLE(req.user.tableName);
+    await dao.populateTEMPTABLE(studyPlan);
+    await dao.emptyTable(req.user.tableName);
+    await dao.copyFromTEMPTABLE(req.user.tableName);
+    await dao.emptyTable("TEMPTABLE");
+
+    console.log("Study plan should have been inserted");
 
     // update type of study plan in 'users' table
-    //await dao.updateStudyPlanType(req.user.email, type);
+    await dao.updateStudyPlanType(req.user.email, type);
 
+    res.status(201).end();
+    console.log("Study plan type should have been updated");
   } catch (err) {
     console.log(err);
     res.status(500).json(err);

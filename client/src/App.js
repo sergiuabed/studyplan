@@ -16,35 +16,27 @@ function App() {
   const [expandPreparatory, setExpandPreparatory] = useState([]);
 
   const [loggedIn, setLoggedIn] = useState(false);
-  const [user, setUser] = useState({'type': '-'});
+  const [user, setUser] = useState({ 'type': '-' });
 
   const [addedCourses, setAddedCourses] = useState([]);     // stores the codes of the courses, not the references to the courses
   const [deletedCourses, setDeletedCourses] = useState([]); // stores the codes of the courses, not the references to the courses
 
-  const [incompatible, setIncompatible] = useState([]);     // when adding a new course to the SP(study plan), the codes of all its incompatible courses are added to this state
-                                                            // when a course is removed from the SP, the codes of its incompatible courses are removed from 'incompatible'
-  
   const [preparatory, setPreparatory] = useState([]);       // contains the codes of the preparatory courses (if present) of the courses in the SP
-                                                            // a course cannot be added to SP unless its preparatory course (if any) is present in SP
-                                                            // a preparatory course cannot be removed from the SP unless the course having this preparatory course is removed first
+  // a course cannot be added to SP unless its preparatory course (if any) is present in SP
+  // a preparatory course cannot be removed from the SP unless the course having this preparatory course is removed first
 
   const [message, setMessage] = useState('');
-  
-  const initPreparatoryIncompatible = (sp) => {
-    let auxIncomp = [];
+  const [saveAction, setSaveAction] = useState(0);
+  const [deleteAction, setDeleteAction] = useState(0);
+
+  const initPreparatory = (sp) => {
     let auxPrep = [];
 
     sp.forEach(c => {
-      if(c.incompatibleWith)
-        auxIncomp = [...auxIncomp, ...c.incompatibleWith];
-    });
-    
-    sp.forEach(c => {
-      if(c.preparatoryCourse)
+      if (c.preparatoryCourse)
         auxPrep = [...auxPrep, c.preparatoryCourse];
     });
 
-    setIncompatible(auxIncomp);
     setPreparatory(auxPrep);
   }
 
@@ -55,34 +47,68 @@ function App() {
     }
 
     loadCourses();
-  }, []);
+  }, [saveAction, deleteAction]);
 
   useEffect(() => { // MODIFY THIS ACCORDINGLY WHEN IMPLEMENTING THE USER SESSIONS
     const loadStudyPlan = async () => {
       let c = await API.getStudyPlan(); // codes of the courses in the study plan
       let crs = courses.filter(e => c.includes(e.code));  // courses corresponding to the codes in 'c'
       setStudyPlan(crs);
-      initPreparatoryIncompatible(c);
+      initPreparatory(c);
     }
 
-    if(loggedIn === true){
+    if (loggedIn === true) {
       loadStudyPlan();
     }
-    else{
+    else {
       setStudyPlan([]);
-      setIncompatible([]);
       setPreparatory([]);
     }
-  }, [loggedIn]);
+  }, [courses, loggedIn]);
+
+  useEffect(() => {
+    const sendModifications = async () => {
+      
+      try {
+
+        if (addedCourses.length !== 0 && deletedCourses.length !== 0) {
+          let sp = studyPlan.map(c => c.code);
+          const msg = await API.putStudyPlan(sp, addedCourses, deletedCourses, user.type);
+          setMessage(msg);
+
+          //  reset addedCourses and deletedCourses states
+          setAddedCourses([]);
+          setDeletedCourses([]);
+
+          // retrieve the updated full course list (nr of enrolled students is updated after saving)
+          let c = await API.getAllCourses();
+          setCourses(c);
+
+        } else {
+          setMessage("There are no courses that have been added or deleted");
+        }
+      } catch (err) {
+        setMessage(err.message);
+      }
+    }
+
+    if(saveAction !== 0)
+      sendModifications();
+
+  }, [saveAction]);
+
+  useEffect(() => {
+    //DELETE IMPLEMENTATION
+  }, [deleteAction]);
 
   const handleLogin = async (username, password) => {
-    try{
+    try {
       const u = await API.login(username, password);
       console.log(u);
       setUser(u);
       setLoggedIn(true);
       setMessage('');
-    }catch(err){
+    } catch (err) {
       setMessage("Username and/or password wrong!");
       console.log(err);
     }
@@ -92,7 +118,6 @@ function App() {
     await API.logout();
     setLoggedIn(false);
     setStudyPlan([]);
-    setIncompatible([]);
     setPreparatory([]);
     setAddedCourses([]);
     setDeletedCourses([]);
@@ -103,9 +128,9 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path='/' element={<Layout message={message} setMessage={setMessage} user={user} loggedIn={ loggedIn } handleLogout={handleLogout}/>}>
-          <Route path='/' element={<Content message={message} setMessage={setMessage} incompatible={incompatible} preparatory={preparatory} setPreparatory={setPreparatory} deletedCourses={deletedCourses} setDeletedCourses={setDeletedCourses} addedCourses={addedCourses} setAddedCourses={setAddedCourses } user={user} setUser={setUser} studyPlan={studyPlan} setStudyPlan={setStudyPlan} courses={courses} expandIncompatible={expandIncompatible} setExpandIncompatible={setExpandIncompatible} expandPreparatory={expandPreparatory} setExpandPreparatory={setExpandPreparatory} loggedIn={loggedIn}/>} />
-          <Route path='/login' element={loggedIn===false ? <LoginForm handleLogin={handleLogin}/> : <Navigate replace to='/' />} />{/* '/login' path is not accessible while a user is logged in. It becomes accessible after logout */}
+        <Route path='/' element={<Layout message={message} setMessage={setMessage} user={user} loggedIn={loggedIn} handleLogout={handleLogout} />}>
+          <Route path='/' element={<Content saveAction={saveAction} setSaveAction={setSaveAction} deleteAction={deleteAction} setDeleteAction={setDeleteAction} message={message} setMessage={setMessage} preparatory={preparatory} setPreparatory={setPreparatory} deletedCourses={deletedCourses} setDeletedCourses={setDeletedCourses} addedCourses={addedCourses} setAddedCourses={setAddedCourses} user={user} setUser={setUser} studyPlan={studyPlan} setStudyPlan={setStudyPlan} courses={courses} setCourses={setCourses} expandIncompatible={expandIncompatible} setExpandIncompatible={setExpandIncompatible} expandPreparatory={expandPreparatory} setExpandPreparatory={setExpandPreparatory} loggedIn={loggedIn} />} />
+          <Route path='/login' element={loggedIn === false ? <LoginForm handleLogin={handleLogin} /> : <Navigate replace to='/' />} />{/* '/login' path is not accessible while a user is logged in. It becomes accessible after logout */}
         </Route>
       </Routes>
     </Router>

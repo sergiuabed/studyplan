@@ -12,7 +12,7 @@ function Layout(props) {
                 </Col>
             </Row>
             <Outlet />
-            {props.message!== '' && <Alert variant="danger" className='alertBottom' onClose={() => props.setMessage('')} dismissible>
+            {props.message!== '' && <Alert variant={props.message === "Study plan saved successfully!" ? "success" : "danger"} className='alertBottom' onClose={() => props.setMessage('')} dismissible>
                 {props.message}
             </Alert>}
         </Container>
