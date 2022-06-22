@@ -53,6 +53,7 @@ const getStudyPlan = async () => {  //"user" WILL BE UNNECESSARY WHEN IMPLEMENTI
         const response = await fetch(serverURL + '/studyplan', { credentials: 'include' });
         if (response.ok) {
             const courses = await response.json();
+            console.log(courses);
             return courses;
         } else {
             const text = await response.text();
@@ -64,14 +65,14 @@ const getStudyPlan = async () => {  //"user" WILL BE UNNECESSARY WHEN IMPLEMENTI
     }
 }
 
-const putStudyPlan = async (addedCourses, deletedCourses, user) => {
+const putStudyPlan = async (studyPlan, addedCourses, deletedCourses, type) => {
     try {
         const response = await fetch(serverURL + '/studyplan',
             {
                 method: 'PUT',
                 credentials: 'include',
                 headers: { 'Content-type': 'application/json' },
-                body: JSON.stringify({ addedCourses: addedCourses, deletedCourses: deletedCourses, type: user.type })
+                body: JSON.stringify({studyPlan, addedCourses, deletedCourses, type })
             });
 
         if (response.ok) {

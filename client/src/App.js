@@ -59,8 +59,9 @@ function App() {
 
   useEffect(() => { // MODIFY THIS ACCORDINGLY WHEN IMPLEMENTING THE USER SESSIONS
     const loadStudyPlan = async () => {
-      let c = await API.getStudyPlan();
-      setStudyPlan(c);
+      let c = await API.getStudyPlan(); // codes of the courses in the study plan
+      let crs = courses.filter(e => c.includes(e.code));  // courses corresponding to the codes in 'c'
+      setStudyPlan(crs);
       initPreparatoryIncompatible(c);
     }
 
@@ -93,6 +94,8 @@ function App() {
     setStudyPlan([]);
     setIncompatible([]);
     setPreparatory([]);
+    setAddedCourses([]);
+    setDeletedCourses([]);
     //setExpandIncompatible([]);
     //setExpandPreparatory([]);
   }

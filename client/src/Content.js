@@ -8,10 +8,16 @@ function Content(props) {
 
     const saveStudyPlan = () => {
         try {
-            const msg = API.putStudyPlan(props.addedCourses, props.deletedCourses, props.user);
-            props.setMessage(msg);
+            //const msg=undefined;
+            //const msg = API.putStudyPlan(props.addedCourses, props.deletedCourses, props.user);
+            //DECIDE WHETHER TO SEND THE MODIFIED STUDY PLAN OR THE ARRAY OF DELETED COURSES AND THE ARRAY OF ADDED COURSES
+            //props.setMessage(msg);
+
+            let sp = props.studyPlan.map(c => c.code);
+            API.putStudyPlan(sp, props.addedCourses, props.deletedCourses, props.user.type);
+
         }catch(err){
-            props.setMessage(err);
+            //props.setMessage(err);
         }
     }
 
@@ -38,7 +44,7 @@ function Content(props) {
                             <div className={"topButtons"}><Button>Cancel Modifications</Button></div>
                             <div className={"topButton"}><Button>Delete Study Plan</Button></div>*/}
                             <Row>
-                                <Col sm={"3"}><div className='topButtons'><Button size="sm" variant="outline-success" className={"topButton"}>Save Modifications</Button></div></Col>
+                                <Col sm={"3"}><div className='topButtons'><Button onClick={saveStudyPlan} size="sm" variant="outline-success" className={"topButton"}>Save Modifications</Button></div></Col>
                                 <Col sm={"3"}><div className='topButtons'><Button onClick={cancelModifications} size="sm" variant="outline-warning" className={"topButton"}>Cancel Modifications</Button></div></Col>
                                 <Col sm={"3"}><div className='topButtons'><Button size="sm" variant="outline-danger" className={"topButton"}>Delete Study Plan</Button></div></Col>
                             </Row>

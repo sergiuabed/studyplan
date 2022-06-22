@@ -78,9 +78,82 @@ app.get('/api/studyplan', isLoggedIn, async (req, res) => { //MODIFY THIS API AC
   }
 });
 
+app.put('/api/studyplan', isLoggedIn, async (req, res) => {
+  try {
+    let studyPlan = req.body.studyPlan;           // contains the codes of the courses
+    let addedCourses = req.body.addedCourses;     // contains the codes of the courses
+    let deletedCourses = req.body.deletedCourses; // contains the codes of the courses
+    let type = req.body.type;
+
+    //  check max nr of students constraint
+    let coursesWithMax = await dao.getCoursesWithMaxStudents();
+    let fullCourses = coursesWithMax.filter(c => c.maxStudents === c.enrolledStudents);
+    let codesFullCourses = fullCourses.map(c => c.code);
+    let courseOverflow = addedCourses.reduce((acc, curr) => codesFullCourses.includes(curr) || acc, false);
+
+    if (courseOverflow === true) {
+      res.status(422).send("One or more courses in the study plan are full. Modify again your study plan.");
+      return;
+    } else {
+      console.log('Max students constraint is respected');
+    }
+
+    // check credits boundaries
+    await dao.createTEMPTABLE();
+    await dao.populateTEMPTABLE(studyPlan);
+    let totCredits = await dao.creditsInTEMPTABLE();
+
+    let min = 0;
+    let max = 0;
+
+    if (type === 'part-time') {
+      min = 20;
+      max = 40;
+    } else {
+      if (type === 'full-time') {
+        min = 60;
+        max = 80;
+      } else {
+        throw new TypeError("Type is not part-time or full-time!");
+      }
+    }
+
+    if (totCredits < min || totCredits > max) {
+      res.status(422).send("The defined study plan does not respect the number of credits boundaries!");
+      return;
+    }else{
+      console.log("Min-max constraints for nr of credits respected!");
+    }
+
+    await dao.emptyTable("TEMPTABLE");
+
+    // increment enrolled students for added courses
+    //await dao.populateTEMPTABLE(addedCourses);
+    //await dao.incrementEnrolledStudents();  // looks in TEMPTABLE for courses to be updated
+    //await dao.emptyTable("TEMPTABLE");
+
+    // decrement enrolled students for deleted courses
+    //await dao.populateTEMPTABLE(deletedCourses);
+    //await dao.decrementEnrolledStudents();  // looks in TEMPTABLE for courses to be updated
+    //await dao.emptyTable("TEMPTABLE");
+    
+    // insert new studyplan
+    //await dao.populateTEMPTABLE(studyPlan);
+    //await dao.emptyTable(req.user.tableName);
+    //await dao.copyFromTEMPTABLE(req.user.tableName);
+
+    // update type of study plan in 'users' table
+    //await dao.updateStudyPlanType(req.user.email, type);
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
 app.post('/api/sessions', passport.authenticate('local'), async (req, res) => {
   let type = await dao.getStudyPlanType(req.user);
-  let usr = {...req.user, type: type};
+  let usr = { ...req.user, type: type };
   res.status(201).json(usr);
 });
 
